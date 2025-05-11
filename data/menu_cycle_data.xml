@@ -1,0 +1,8 @@
+<odoo>
+    <record id="breakfast_cycle" model="industrial.menu.cycle">
+        <field name="name">Breakfast Cycle</field>
+        <field name="meal_type">breakfast</field>
+        <field name="duration_weeks">3</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_recipe_form" model="ir.ui.view">
+        <field name="name">industrial.recipe.form</field>
+        <field name="model">industrial.recipe</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="cooking_technique"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="preparation_instructions"/>
+                    </group>
+                    <notebook>
+                        <page string="Ingredients">
+                            <field name="ingredient_lines" widget="one2many_list"/>
+                        </page>
+                        <page string="Portions">
+                            <field name="portion_ids" widget="one2many_list"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

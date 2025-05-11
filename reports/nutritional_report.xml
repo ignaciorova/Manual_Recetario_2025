@@ -1,0 +1,25 @@
+<odoo>
+    <record id="report_nutritional_summary" model="ir.actions.report">
+        <field name="name">Nutritional Summary</field>
+        <field name="model">industrial.menu.cycle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industrial_menu_management.nutritional_summary_template</field>
+    </record>
+    <template id="nutritional_summary_template">
+        <t t-call="web.html_container">
+            <div class="page">
+                <h2>Nutritional Summary</h2>
+                <table class="table table-striped">
+                    <tr><th>Menu</th><th>Energy (kcal)</th><th>Protein (g)</th></tr>
+                    <t t-foreach="docs" t-as="cycle">
+                        <tr>
+                            <td><t t-esc="cycle.name"/></td>
+                            <td><t t-esc="sum(cycle.menu_items.mapped('nutritional_info_id.energy_kcal'))"/></td>
+                            <td><t t-esc="sum(cycle.menu_items.mapped('nutritional_info_id.protein_g'))"/></td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

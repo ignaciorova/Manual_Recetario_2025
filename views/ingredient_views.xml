@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_ingredient_form" model="ir.ui.view">
+        <field name="name">industrial.ingredient.form</field>
+        <field name="model">industrial.ingredient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="unit_of_measure"/>
+                        <field name="seasonality"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

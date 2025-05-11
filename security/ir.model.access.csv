@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_menu_cycle,industrial.menu.cycle,industrial_menu_management.model_industrial_menu_cycle,base.group_user,1,1,1,1
+access_menu_item,industrial.menu.item,industrial_menu_management.model_industrial_menu_item,base.group_user,1,1,1,1
+access_recipe,industrial.recipe,industrial_menu_management.model_industrial_recipe,base.group_user,1,1,1,1
+access_ingredient,industrial.ingredient,industrial_menu_management.model_industrial_ingredient,base.group_user,1,1,1,1
+access_nutritional_info,industrial.nutritional.info,industrial_menu_management.model_industrial_nutritional_info,base.group_user,1,1,1,1
+access_portion,industrial.portion,industrial_menu_management.model_industrial_portion,base.group_user,1,1,1,1
+access_recipe_ingredient,industrial.recipe.ingredient,industrial_menu_management.model_industrial_recipe_ingredient,base.group_user,1,1,1,1

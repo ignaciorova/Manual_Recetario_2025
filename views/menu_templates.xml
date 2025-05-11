@@ -1,0 +1,8 @@
+<odoo>
+    <template id="menu_dashboard">
+        <div class="o_dashboard">
+            <h2>Menu Management Dashboard</h2>
+            <t t-call="web.GraphView" t-options="{'model': 'industrial.menu.cycle', 'type': 'pie', 'fields': ['name', 'duration_weeks'], 'domain': [('company_id', '=', user.company_id.id)]}"/>
+        </div>
+    </template>
+</odoo>

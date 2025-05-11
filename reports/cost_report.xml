@@ -1,0 +1,24 @@
+<odoo>
+    <record id="report_cost_summary" model="ir.actions.report">
+        <field name="name">Cost Summary</field>
+        <field name="model">industrial.menu.cycle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industrial_menu_management.cost_summary_template</field>
+    </record>
+    <template id="cost_summary_template">
+        <t t-call="web.html_container">
+            <div class="page">
+                <h2>Cost Summary</h2>
+                <table class="table table-striped">
+                    <tr><th>Menu</th><th>Cost</th></tr>
+                    <t t-foreach="docs" t-as="cycle">
+                        <tr>
+                            <td><t t-esc="cycle.name"/></td>
+                            <td><t t-esc="sum(cycle.menu_items.mapped('recipe_ids.ingredient_lines').mapped('ingredient_id.product_id.standard_price') * cycle.menu_items.mapped('recipe_ids.ingredient_lines').mapped('quantity'))"/></td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

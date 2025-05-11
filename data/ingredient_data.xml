@@ -1,0 +1,7 @@
+<odoo>
+    <record id="ingredient_rice" model="industrial.ingredient">
+        <field name="name">Rice</field>
+        <field name="seasonality">all_year</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>

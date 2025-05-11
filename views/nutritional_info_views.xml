@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_nutritional_info_form" model="ir.ui.view">
+        <field name="name">industrial.nutritional.info.form</field>
+        <field name="model">industrial.nutritional.info</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="energy_kcal"/>
+                        <field name="protein_g"/>
+                        <field name="fat_g"/>
+                        <field name="carbs_g"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
