@@ -74,17 +74,33 @@ def init_db():
     conn.close()
 
 # Function to extract recipes from PDF
-def extract_recipes_from_pdf(pdf_path):
+def extract_recipes_from_pdf(pdf_path, start_page=40, end_page=210):
+    if not os.path.exists(pdf_path):
+        raise FileNotFoundError(f"PDF file '{pdf_path}' not found. Please upload the PDF first.")
+
     doc = fitz.open(pdf_path)
+    num_pages = len(doc)
+
+    # Validate page range
+    if num_pages == 0:
+        doc.close()
+        raise ValueError("The PDF document is empty.")
+    if start_page < 0 or end_page >= num_pages or start_page > end_page:
+        doc.close()
+        raise ValueError(f"Invalid page range: {start_page}-{end_page}. The PDF has {num_pages} pages (0-based: 0 to {num_pages-1}).")
+
     recipes = []
     current_recipe = None
     current_section = None
     in_ingredients = False
     in_steps = False
+    efemerides_recipes = []
     portions_dict = {}
 
-    # Load portion data from pages 223-271
-    for page_num in range(222, 271):  # Pages 223-271 (0-based: 222-270)
+    # Load portion data from pages 223-271 (adjust dynamically)
+    portion_start = min(222, num_pages - 1)
+    portion_end = min(270, num_pages - 1)
+    for page_num in range(portion_start, portion_end + 1):
         page = doc[page_num]
         text = page.get_text("text")
         lines = text.split('\n')
@@ -127,8 +143,8 @@ def extract_recipes_from_pdf(pdf_path):
         "OPCIONES PARA CELEBRACIONES": ("Efemérides", "Celebración")
     }
 
-    # Process pages 41-211 (Recetario)
-    for page_num in range(40, 211):  # 0-based index, so 40 is page 41
+    # Process pages for recipes (start_page to end_page)
+    for page_num in range(start_page, end_page + 1):
         page = doc[page_num]
         text = page.get_text("text")
         lines = text.split('\n')
@@ -204,8 +220,10 @@ def extract_recipes_from_pdf(pdf_path):
     if current_recipe:
         recipes.append(current_recipe)
 
-    # Extract efemerides (pages 161-179)
-    for page_num in range(160, 179):  # Pages 161-179
+    # Extract efemerides (pages 161-179, adjust dynamically)
+    efemerides_start = min(160, num_pages - 1)
+    efemerides_end = min(178, num_pages - 1)
+    for page_num in range(efemerides_start, efemerides_end + 1):
         page = doc[page_num]
         text = page.get_text("text")
         lines = text.split('\n')
@@ -300,16 +318,35 @@ init_db()
 # Upload PDF
 st.header("Cargar Manual de Menú")
 uploaded_file = st.file_uploader("Sube el archivo PDF", type="pdf")
+pdf_path = "menu-primaria.pdf"
+
 if uploaded_file:
-    with open("menu-primaria.pdf", "wb") as f:
+    with open(pdf_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
     st.success("PDF cargado exitosamente")
 
-    # Extract and save recipes
+# Extract and save recipes
+if os.path.exists(pdf_path):
+    doc = fitz.open(pdf_path)
+    num_pages = len(doc)
+    doc.close()
+    st.write(f"El PDF tiene {num_pages + 1} páginas (índices 0 a {num_pages}).")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        start_page = st.number_input("Página inicial (índice 0-based)", min_value=0, max_value=num_pages - 1, value=40)
+    with col2:
+        end_page = st.number_input("Página final (índice 0-based)", min_value=0, max_value=num_pages - 1, value=min(210, num_pages - 1))
+
     if st.button("Extraer y Guardar Recetas"):
-        recipes = extract_recipes_from_pdf("menu-primaria.pdf")
-        save_recipes_to_db(recipes)
-        st.success(f"{len(recipes)} recetas extraídas y guardadas")
+        try:
+            recipes = extract_recipes_from_pdf(pdf_path, start_page, end_page)
+            save_recipes_to_db(recipes)
+            st.success(f"{len(recipes)} recetas extraídas y guardadas")
+        except Exception as e:
+            st.error(f"Error al extraer recetas: {str(e)}")
+else:
+    st.warning("Por favor, sube un archivo PDF antes de extraer recetas.")
 
 # Tabs
 tab1, tab2, tab3, tab4 = st.tabs(["Fichas Técnicas", "Ciclos de Menú", "Estacionalidad", "Reportes"])
